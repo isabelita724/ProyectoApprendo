@@ -8,6 +8,6 @@ package proyectoapprendo.model;
  *
  * @author ISABELLA
  */
-public class model_admin {
+public class Alumno {
     
 }
