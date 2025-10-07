@@ -5,9 +5,11 @@
 package view;
 
 import java.util.ArrayList;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 import model.Usuario;
 import javax.swing.JOptionPane;
+import model.Curso;
 
 /**
  *
@@ -19,6 +21,9 @@ public class MenuTutores01 extends javax.swing.JFrame {
     
     DefaultTableModel modelo;
     ArrayList<Usuario> listaUsuario = new ArrayList<Usuario>();
+    
+    private DefaultTableModel modeloCursos;
+    private ArrayList<Curso> listaCursos = new ArrayList<>();
     
     public MenuTutores01() {
         initComponents();
@@ -41,7 +46,22 @@ public class MenuTutores01 extends javax.swing.JFrame {
             tablaMouseClicked(evt);
         }
     });
-        
+    
+       modeloCursos = new DefaultTableModel();
+       modeloCursos.addColumn("Código");
+       modeloCursos.addColumn("Nombre");
+       modeloCursos.addColumn("Tutor");
+       modeloCursos.addColumn("Horario");
+       modeloCursos.addColumn("Sede");
+       modeloCursos.addColumn("Cupos Max");
+       modeloCursos.addColumn("Cupos Disp");
+
+       if (tablaCursos != null) {
+           this.tablaCursos.setModel(modeloCursos);
+       }
+
+        cargarCursosPredeterminados();
+        refrescarTablaCursos();
     }
     
     private void cargarDatosPredeterminados() {
@@ -50,6 +70,16 @@ public class MenuTutores01 extends javax.swing.JFrame {
     listaUsuario.add(new Usuario(103234569L, "María", "López", "Taller de Emprendimiento y Modelos de Negocio", "maria.lopez@gmail.com", 3203456789L));
     listaUsuario.add(new Usuario(104234570L, "Juan", "Martínez", "Curso de Inglés Conversacional", "juan.martinez@gmail.com", 3154567890L));
 }
+    
+    private int contarEstudiantesEnCurso(String nombreCurso) {
+    int contador = 0;
+    for (Usuario estudiante : listaUsuario) {
+        if (estudiante.getCurso().equals(nombreCurso)) {
+            contador++;
+        }
+    }
+    return contador;
+    }
     
     private boolean validarCorreo(String correo) {
         String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
@@ -97,6 +127,85 @@ public class MenuTutores01 extends javax.swing.JFrame {
         tabla.setModel(modelo);
         
     }
+    
+    public void refrescarTablaCursos() {
+    // Limpiar tabla
+    while (modeloCursos.getRowCount() > 0) {
+        modeloCursos.removeRow(0);
+    }
+    
+    // Llenar con datos actualizados
+    for (Curso curso : listaCursos) {
+        Object[] fila = new Object[7];
+        fila[0] = curso.getCodigo();
+        fila[1] = curso.getNombre();
+        fila[2] = curso.getTutor();
+        fila[3] = curso.getHorario();
+        fila[4] = curso.getSede();
+        fila[5] = curso.getCuposMaximos();
+        fila[6] = curso.getCuposDisponibles();
+        
+        modeloCursos.addRow(fila);
+    }
+    
+    
+    tablaCursos.setModel(modeloCursos);
+}
+    
+    private void cargarCursosPredeterminados() {
+    listaCursos.add(new Curso("PROG01", "Taller de Programación Básica en Python", 
+        "Dr. Carlos Martínez Herrera", "Lunes y Miércoles 14:00-16:00", 
+        "Cartagena - Sede Centro Histórico", 25));
+    
+    listaCursos.add(new Curso("FOTO01", "Curso de Fotografía Digital", 
+        "Lic. Ana Rodríguez Pérez", "Martes y Jueves 16:00-18:00", 
+        "Cartagena - Sede Bocagrande", 20));
+}
+    
+    private void limpiarCamposCursos() {
+    Tx_codigoCurso.setText("");
+    Tx_nombreCurso.setText("");
+    Cb_tutorCurso.setSelectedIndex(0);
+    Cb_horarioCurso.setSelectedIndex(0);
+    Cb_sedeCurso.setSelectedIndex(0);
+    Sp_cuposCurso.setValue(20); // Valor por defecto
+    
+    // Deseleccionar cualquier fila en la tabla
+    tablaCursos.clearSelection();
+    }
+    
+    
+    private void tablaCursosMouseClicked(java.awt.event.MouseEvent evt) {                                     
+        int fila = tablaCursos.getSelectedRow();
+        if (fila >= 0 && fila < listaCursos.size()) {
+            Curso curso = listaCursos.get(fila);
+
+            // Llenar campos con los datos del curso seleccionado
+            Tx_codigoCurso.setText(curso.getCodigo());
+            Tx_nombreCurso.setText(curso.getNombre());
+
+            // Seleccionar en ComboBoxes
+            seleccionarEnComboBox(Cb_tutorCurso, curso.getTutor());
+            seleccionarEnComboBox(Cb_horarioCurso, curso.getHorario());
+            seleccionarEnComboBox(Cb_sedeCurso, curso.getSede());
+
+            // Establecer valor en Spinner
+            Sp_cuposCurso.setValue(curso.getCuposMaximos());
+
+            System.out.println("✅ Curso seleccionado: " + curso.getNombre());
+        }
+    }
+    
+    private void seleccionarEnComboBox(JComboBox<String> comboBox, String valor) {
+    for (int i = 0; i < comboBox.getItemCount(); i++) {
+        if (comboBox.getItemAt(i).equals(valor)) {
+            comboBox.setSelectedIndex(i);
+            return;
+        }
+    }
+    // Si no encuentra el valor, selecciona el primero
+    comboBox.setSelectedIndex(0);
+}
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -146,14 +255,14 @@ public class MenuTutores01 extends javax.swing.JFrame {
         Tx_nombreCurso = new javax.swing.JTextField();
         Cb_tutorCurso = new javax.swing.JComboBox<>();
         Cb_horarioCurso = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jTextField3 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        Cb_sedeCurso = new javax.swing.JComboBox<>();
+        Jb_agregarCurso = new javax.swing.JButton();
+        Jb_eliminarCurso = new javax.swing.JButton();
+        Jb_modificarCurso = new javax.swing.JButton();
+        Jb_buscarCurso = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaCursos = new javax.swing.JTable();
+        Sp_cuposCurso = new javax.swing.JSpinner();
         jPanel10 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -510,27 +619,42 @@ public class MenuTutores01 extends javax.swing.JFrame {
 
         Cb_tutorCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Tutor", "Dr. Carlos Martínez", "Lic. Ana Rodríguez", "Mg. Luis González", "Prof. María López", "Ing. Jorge Silva", "Dra. Patricia Castro", "Lic. Roberto Mendoza", "Mg. Sandra Rojas" }));
 
-        Cb_horarioCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Horario" }));
+        Cb_horarioCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Horario", "Lunes y Miércoles 08:00-10:00", "Lunes y Miércoles 10:00-12:00", "Lunes y Miércoles 14:00-16:00", "Lunes y Miércoles 16:00-18:00", "Lunes y Miércoles 18:00-20:00", "Martes y Jueves 08:00-10:00", "Martes y Jueves 10:00-12:00", "Martes y Jueves 14:00-16:00", "Martes y Jueves 16:00-18:00", "Martes y Jueves 18:00-20:00", "Viernes 14:00-18:00", "Viernes 18:00-22:00", "Sábados 08:00-12:00", "Sábados 14:00-18:00", "Domingos 08:00-12:00" }));
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Sede", "Cartagena - Sede Centro Histórico", "Cartagena - Sede Bocagrande", "Cartagena - Sede Manga", "Turbaco - Sede Principal", "Arjona - Sede Norte", "Magangué - Sede Sur", "Carmen de Bolívar - Sede Oriental", "San Juan Nepomuceno - Sede Montaña", "Santa Rosa de Lima - Sede Costera", "María La Baja - Sede Rural" }));
+        Cb_sedeCurso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Sede", "Cartagena - Sede Centro Histórico", "Cartagena - Sede Bocagrande", "Cartagena - Sede Manga", "Turbaco - Sede Principal", "Arjona - Sede Norte", "Magangué - Sede Sur", "Carmen de Bolívar - Sede Oriental", "San Juan Nepomuceno - Sede Montaña", "Santa Rosa de Lima - Sede Costera", "María La Baja - Sede Rural" }));
 
-        jButton1.setBackground(new java.awt.Color(0, 255, 0));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton1.setText("AGREGAR");
+        Jb_agregarCurso.setBackground(new java.awt.Color(0, 255, 0));
+        Jb_agregarCurso.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Jb_agregarCurso.setText("AGREGAR");
+        Jb_agregarCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jb_agregarCursoActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(255, 0, 0));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton2.setText("ELIMINAR");
+        Jb_eliminarCurso.setBackground(new java.awt.Color(255, 0, 0));
+        Jb_eliminarCurso.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Jb_eliminarCurso.setText("ELIMINAR");
+        Jb_eliminarCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jb_eliminarCursoActionPerformed(evt);
+            }
+        });
 
-        jButton3.setBackground(new java.awt.Color(51, 51, 255));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton3.setText("MODIFICAR");
+        Jb_modificarCurso.setBackground(new java.awt.Color(51, 51, 255));
+        Jb_modificarCurso.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Jb_modificarCurso.setText("MODIFICAR");
+        Jb_modificarCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jb_modificarCursoActionPerformed(evt);
+            }
+        });
 
-        jButton4.setBackground(new java.awt.Color(255, 255, 51));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton4.setText("BUSCAR");
+        Jb_buscarCurso.setBackground(new java.awt.Color(255, 255, 51));
+        Jb_buscarCurso.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Jb_buscarCurso.setText("BUSCAR");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCursos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -541,7 +665,9 @@ public class MenuTutores01 extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tablaCursos);
+
+        Sp_cuposCurso.setModel(new javax.swing.SpinnerNumberModel(10, 10, 35, 1));
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -550,17 +676,12 @@ public class MenuTutores01 extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addComponent(Jb_agregarCurso)
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel9Layout.createSequentialGroup()
                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)))
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(107, 107, 107)
-                        .addComponent(jButton3))
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -578,20 +699,26 @@ public class MenuTutores01 extends javax.swing.JFrame {
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addComponent(Cb_tutorCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(41, 41, 41)
-                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(96, 96, 96)
+                        .addComponent(Jb_eliminarCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Jb_modificarCurso)
+                        .addGap(20, 20, 20)))
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Cb_sedeCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(Sp_cuposCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(199, 199, 199))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGap(99, 99, 99)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Jb_buscarCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 825, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -607,7 +734,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Tx_codigoCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Cb_tutorCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Cb_sedeCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(39, 39, 39)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
@@ -615,13 +742,13 @@ public class MenuTutores01 extends javax.swing.JFrame {
                     .addComponent(jLabel18)
                     .addComponent(Tx_nombreCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Cb_horarioCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Sp_cuposCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(Jb_agregarCurso)
+                    .addComponent(Jb_eliminarCurso)
+                    .addComponent(Jb_modificarCurso)
+                    .addComponent(Jb_buscarCurso))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
@@ -918,10 +1045,173 @@ public class MenuTutores01 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_Tx_codigoCursoActionPerformed
 
+    private void Jb_agregarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jb_agregarCursoActionPerformed
+        if (Tx_codigoCurso.getText().trim().isEmpty() || 
+        Tx_nombreCurso.getText().trim().isEmpty()) {
+        
+        JOptionPane.showMessageDialog(this, 
+            "Los campos Código y Nombre son obligatorios", 
+            "Campos incompletos", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
     
-    /**
-     * @param args the command line arguments
-     */
+    // 2. VALIDAR COMBOBOXES
+    if (Cb_tutorCurso.getSelectedIndex() == 0) {
+        JOptionPane.showMessageDialog(this, 
+            "Por favor seleccione un tutor", 
+            "Tutor no seleccionado", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    if (Cb_horarioCurso.getSelectedIndex() == 0) {
+        JOptionPane.showMessageDialog(this, 
+            "Por favor seleccione un horario", 
+            "Horario no seleccionado", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    if (Cb_sedeCurso.getSelectedIndex() == 0) {
+        JOptionPane.showMessageDialog(this, 
+            "Por favor seleccione una sede", 
+            "Sede no seleccionada", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // 3. VALIDAR SPINNER (OBTENER Y VERIFICAR VALOR)
+    int cupos = (Integer) Sp_cuposCurso.getValue();
+    if (cupos < 10 || cupos > 35) {
+        JOptionPane.showMessageDialog(this, 
+            "Los cupos deben estar entre 10 y 35\n" +
+            "Valor actual: " + cupos, 
+            "Cupos fuera de rango", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    //VALIDAR QUE EL CÓDIGO NO EXISTA
+    String codigo = Tx_codigoCurso.getText().trim().toUpperCase();
+    for (Curso cursoExistente : listaCursos) {
+        if (cursoExistente.getCodigo().equalsIgnoreCase(codigo)) {
+            JOptionPane.showMessageDialog(this, 
+                "Ya existe un curso con el código: " + codigo + "\n" +
+                "Curso existente: " + cursoExistente.getNombre(), 
+                "Código duplicado", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+    
+    try {
+        // 5. CREAR NUEVO CURSO
+        Curso nuevoCurso = new Curso(
+            codigo, // Convertido a mayúsculas
+            Tx_nombreCurso.getText().trim(),
+            Cb_tutorCurso.getSelectedItem().toString(),
+            Cb_horarioCurso.getSelectedItem().toString(),
+            Cb_sedeCurso.getSelectedItem().toString(),
+            cupos // Usamos la variable ya validada
+        );
+        
+        // AGREGAR A LA LISTA
+        listaCursos.add(nuevoCurso);
+        
+        // ACTUALIZAR TABLA
+        refrescarTablaCursos();
+        
+        // LIMPIAR CAMPOS
+        limpiarCamposCursos();
+        
+        // MENSAJE DE CONFIRMACIÓN
+        JOptionPane.showMessageDialog(this, 
+            "Curso agregado correctamente\n" +
+            "• Código: " + codigo + "\n" +
+            "• Nombre: " + nuevoCurso.getNombre() + "\n" +
+            "• Tutor: " + nuevoCurso.getTutor() + "\n" +
+            "• Cupos: " + nuevoCurso.getCuposMaximos(),
+            "Curso registrado", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+            "Error al agregar el curso: " + e.getMessage(), 
+            "Error inesperado", 
+            JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace(); // Para debug
+    }
+    }//GEN-LAST:event_Jb_agregarCursoActionPerformed
+
+    private void Jb_eliminarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jb_eliminarCursoActionPerformed
+        int filaSeleccionada = tablaCursos.getSelectedRow();
+    
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, 
+            "Por favor seleccione un curso de la tabla para eliminar", 
+            "Ningún curso seleccionado", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // 2. OBTENER EL CURSO SELECCIONADO
+    Curso cursoAEliminar = listaCursos.get(filaSeleccionada);
+    
+    // 3. VERIFICAR SI HAY ESTUDIANTES INSCRITOS EN ESTE CURSO
+    int estudiantesInscritos = contarEstudiantesEnCurso(cursoAEliminar.getNombre());
+    
+    if (estudiantesInscritos > 0) {
+        JOptionPane.showMessageDialog(this, 
+            "No se puede eliminar el curso\n\n" +
+            "• Curso: " + cursoAEliminar.getNombre() + "\n" +
+            "• Código: " + cursoAEliminar.getCodigo() + "\n" +
+            "• Estudiantes inscritos: " + estudiantesInscritos + "\n\n" +
+            "Primero debe reasignar o eliminar los estudiantes de este curso.", 
+            "Curso con estudiantes inscritos", 
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // 4. CONFIRMAR ELIMINACIÓN
+    int confirmacion = JOptionPane.showConfirmDialog(this,
+        "¿Está seguro que desea eliminar este curso?\n\n" +
+        "Información del curso:\n" +
+        "• Código: " + cursoAEliminar.getCodigo() + "\n" +
+        "• Nombre: " + cursoAEliminar.getNombre() + "\n" +
+        "• Tutor: " + cursoAEliminar.getTutor() + "\n" +
+        "• Sede: " + cursoAEliminar.getSede() + "\n\n" +
+        "⚠️ Esta acción no se puede deshacer",
+        "Confirmar eliminación de curso",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE);
+    
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        // 5. ELIMINAR EL CURSO
+        listaCursos.remove(filaSeleccionada);
+        
+        // 6. ACTUALIZAR LA TABLA
+        refrescarTablaCursos();
+        
+        // 7. LIMPIAR CAMPOS SI EL CURSO ELIMINADO ESTABA CARGADO
+        limpiarCamposCursos();
+        
+        // 8. MENSAJE DE CONFIRMACIÓN
+        JOptionPane.showMessageDialog(this, 
+            "Curso eliminado correctamente\n\n" +
+            "• Código: " + cursoAEliminar.getCodigo() + "\n" +
+            "• Nombre: " + cursoAEliminar.getNombre(), 
+            "Curso eliminado", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    }//GEN-LAST:event_Jb_eliminarCursoActionPerformed
+
+    private void Jb_modificarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jb_modificarCursoActionPerformed
+        
+    }//GEN-LAST:event_Jb_modificarCursoActionPerformed
+
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -951,7 +1241,13 @@ public class MenuTutores01 extends javax.swing.JFrame {
     private javax.swing.JButton Bt_modificar;
     private javax.swing.JComboBox<String> Cb_curso;
     private javax.swing.JComboBox<String> Cb_horarioCurso;
+    private javax.swing.JComboBox<String> Cb_sedeCurso;
     private javax.swing.JComboBox<String> Cb_tutorCurso;
+    private javax.swing.JButton Jb_agregarCurso;
+    private javax.swing.JButton Jb_buscarCurso;
+    private javax.swing.JButton Jb_eliminarCurso;
+    private javax.swing.JButton Jb_modificarCurso;
+    private javax.swing.JSpinner Sp_cuposCurso;
     private javax.swing.JTextField Tx_apellido;
     private javax.swing.JTextField Tx_codigoCurso;
     private javax.swing.JTextField Tx_email;
@@ -959,11 +1255,6 @@ public class MenuTutores01 extends javax.swing.JFrame {
     private javax.swing.JTextField Tx_nombre;
     private javax.swing.JTextField Tx_nombreCurso;
     private javax.swing.JTextField Tx_telefono;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -995,8 +1286,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTable tabla;
+    private javax.swing.JTable tablaCursos;
     // End of variables declaration//GEN-END:variables
 }
