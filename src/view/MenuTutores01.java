@@ -207,6 +207,22 @@ public class MenuTutores01 extends javax.swing.JFrame {
     comboBox.setSelectedIndex(0);
 }
     
+    private void actualizarNombreCursoEnEstudiantes(String nombreViejo, String nombreNuevo) {
+        int estudiantesActualizados = 0;
+
+        for (Usuario estudiante : listaUsuario) {
+            if (estudiante.getCurso().equals(nombreViejo)) {
+                estudiante.setCurso(nombreNuevo);
+                estudiantesActualizados++;
+            }
+        }
+
+        if (estudiantesActualizados > 0) {
+            refrescarTabla(); // Actualizar tabla de estudiantes
+            System.out.println("✅ Actualizados " + estudiantesActualizados + " estudiantes al nuevo nombre del curso");
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -653,6 +669,11 @@ public class MenuTutores01 extends javax.swing.JFrame {
         Jb_buscarCurso.setBackground(new java.awt.Color(255, 255, 51));
         Jb_buscarCurso.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         Jb_buscarCurso.setText("BUSCAR");
+        Jb_buscarCurso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jb_buscarCursoActionPerformed(evt);
+            }
+        });
 
         tablaCursos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1207,8 +1228,215 @@ public class MenuTutores01 extends javax.swing.JFrame {
     }//GEN-LAST:event_Jb_eliminarCursoActionPerformed
 
     private void Jb_modificarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jb_modificarCursoActionPerformed
-        
+            int filaSeleccionada = tablaCursos.getSelectedRow();
+
+       if (filaSeleccionada == -1) {
+           JOptionPane.showMessageDialog(this, 
+               "Por favor seleccione un curso de la tabla para modificar", 
+               "Ningún curso seleccionado", 
+               JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+
+       // 2. VALIDAR CAMPOS OBLIGATORIOS
+       if (Tx_codigoCurso.getText().trim().isEmpty() || 
+           Tx_nombreCurso.getText().trim().isEmpty()) {
+
+           JOptionPane.showMessageDialog(this, 
+               "Los campos Código y Nombre son obligatorios", 
+               "Campos incompletos", 
+               JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+
+       // 3. VALIDAR COMBOBOXES
+       if (Cb_tutorCurso.getSelectedIndex() == 0) {
+           JOptionPane.showMessageDialog(this, 
+               "Por favor seleccione un tutor", 
+               "Tutor no seleccionado", 
+               JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+
+       if (Cb_horarioCurso.getSelectedIndex() == 0) {
+           JOptionPane.showMessageDialog(this, 
+               "Por favor seleccione un horario", 
+               "Horario no seleccionado", 
+               JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+
+       if (Cb_sedeCurso.getSelectedIndex() == 0) {
+           JOptionPane.showMessageDialog(this, 
+               "Por favor seleccione una sede", 
+               "Sede no seleccionada", 
+               JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+
+       // 4. VALIDAR SPINNER
+       int nuevosCupos = (Integer) Sp_cuposCurso.getValue();
+       if (nuevosCupos < 10 || nuevosCupos > 35) {
+           JOptionPane.showMessageDialog(this, 
+               "Los cupos deben estar entre 10 y 35\n" +
+               "Valor actual: " + nuevosCupos, 
+               "Cupos fuera de rango", 
+               JOptionPane.WARNING_MESSAGE);
+           return;
+       }
+
+       try {
+           // 5. OBTENER EL CURSO ORIGINAL
+           Curso cursoOriginal = listaCursos.get(filaSeleccionada);
+           String codigoOriginal = cursoOriginal.getCodigo();
+           String codigoNuevo = Tx_codigoCurso.getText().trim().toUpperCase();
+
+           // 6. VERIFICAR SI SE CAMBIÓ EL CÓDIGO Y SI EL NUEVO CÓDIGO YA EXISTE
+           if (!codigoOriginal.equals(codigoNuevo)) {
+               for (Curso cursoExistente : listaCursos) {
+                   if (cursoExistente.getCodigo().equalsIgnoreCase(codigoNuevo) && 
+                       !cursoExistente.getCodigo().equals(codigoOriginal)) {
+
+                       JOptionPane.showMessageDialog(this, 
+                           "Ya existe otro curso con el código: " + codigoNuevo + "\n" +
+                           "Curso existente: " + cursoExistente.getNombre(), 
+                           "Código duplicado", 
+                           JOptionPane.ERROR_MESSAGE);
+                       return;
+                   }
+               }
+           }
+
+           // 7. VERIFICAR REDUCCIÓN DE CUPOS (si hay estudiantes inscritos)
+           int estudiantesInscritos = contarEstudiantesEnCurso(cursoOriginal.getNombre());
+           if (nuevosCupos < cursoOriginal.getCuposMaximos() && estudiantesInscritos > nuevosCupos) {
+               JOptionPane.showMessageDialog(this, 
+                   "No se pueden reducir los cupos\n\n" +
+                   "• Cupos actuales: " + cursoOriginal.getCuposMaximos() + "\n" +
+                   "• Cupos nuevos: " + nuevosCupos + "\n" +
+                   "• Estudiantes inscritos: " + estudiantesInscritos + "\n\n" +
+                   "Los nuevos cupos no pueden ser menores que la cantidad\nde estudiantes ya inscritos en el curso.", 
+                   "Reducción de cupos no permitida", 
+                   JOptionPane.ERROR_MESSAGE);
+               return;
+           }
+
+           // 8. CONFIRMAR MODIFICACIÓN
+           int confirmacion = JOptionPane.showConfirmDialog(this,
+               "¿Está seguro que desea modificar este curso?\n\n" +
+               "Cambios a realizar:\n" +
+               "• Código: " + cursoOriginal.getCodigo() + " → " + codigoNuevo + "\n" +
+               "• Nombre: " + cursoOriginal.getNombre() + " → " + Tx_nombreCurso.getText().trim() + "\n" +
+               "• Tutor: " + cursoOriginal.getTutor() + " → " + Cb_tutorCurso.getSelectedItem().toString() + "\n" +
+               "• Horario: " + cursoOriginal.getHorario() + " → " + Cb_horarioCurso.getSelectedItem().toString() + "\n" +
+               "• Sede: " + cursoOriginal.getSede() + " → " + Cb_sedeCurso.getSelectedItem().toString() + "\n" +
+               "• Cupos: " + cursoOriginal.getCuposMaximos() + " → " + nuevosCupos + "\n\n" +
+               "⚠️ Los cambios afectarán a todos los estudiantes inscritos",
+               "Confirmar modificación de curso",
+               JOptionPane.YES_NO_OPTION,
+               JOptionPane.WARNING_MESSAGE);
+
+           if (confirmacion == JOptionPane.YES_OPTION) {
+               // 9. ACTUALIZAR EL CURSO
+               cursoOriginal.setCodigo(codigoNuevo);
+               cursoOriginal.setNombre(Tx_nombreCurso.getText().trim());
+               cursoOriginal.setTutor(Cb_tutorCurso.getSelectedItem().toString());
+               cursoOriginal.setHorario(Cb_horarioCurso.getSelectedItem().toString());
+               cursoOriginal.setSede(Cb_sedeCurso.getSelectedItem().toString());
+               cursoOriginal.setCuposMaximos(nuevosCupos);
+
+               // 10. ACTUALIZAR EL NOMBRE DEL CURSO EN LOS ESTUDIANTES INSCRITOS
+               if (!cursoOriginal.getNombre().equals(Tx_nombreCurso.getText().trim())) {
+                   actualizarNombreCursoEnEstudiantes(cursoOriginal.getNombre(), Tx_nombreCurso.getText().trim());
+               }
+
+               // 11. ACTUALIZAR LA TABLA
+               refrescarTablaCursos();
+
+               // 12. LIMPIAR CAMPOS
+               limpiarCamposCursos();
+
+               // 13. MENSAJE DE CONFIRMACIÓN
+               JOptionPane.showMessageDialog(this, 
+                   "✅ Curso modificado correctamente\n\n" +
+                   "• Código: " + codigoNuevo + "\n" +
+                   "• Nombre: " + cursoOriginal.getNombre() + "\n" +
+                   "• Estudiantes actualizados: " + estudiantesInscritos, 
+                   "Curso actualizado", 
+                   JOptionPane.INFORMATION_MESSAGE);
+           }
+
+       } catch (Exception e) {
+           JOptionPane.showMessageDialog(this, 
+               "Error al modificar el curso: " + e.getMessage(), 
+               "Error inesperado", 
+               JOptionPane.ERROR_MESSAGE);
+           e.printStackTrace();
+       }
     }//GEN-LAST:event_Jb_modificarCursoActionPerformed
+
+    private void Jb_buscarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jb_buscarCursoActionPerformed
+        String terminoBusqueda = Tx_codigoCurso.getText().trim();
+    
+    if (terminoBusqueda.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Ingrese un código de curso para buscar", 
+            "Campo de búsqueda vacío", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // 2. BUSCAR EL CURSO
+    boolean encontrado = false;
+    terminoBusqueda = terminoBusqueda.toUpperCase(); // Búsqueda case-insensitive
+    
+    for (int i = 0; i < listaCursos.size(); i++) {
+        Curso curso = listaCursos.get(i);
+        
+        if (curso.getCodigo().equalsIgnoreCase(terminoBusqueda)) {
+            // 3. CARGAR DATOS EN LOS CAMPOS
+            Tx_codigoCurso.setText(curso.getCodigo());
+            Tx_nombreCurso.setText(curso.getNombre());
+            
+            // Seleccionar en ComboBoxes
+            seleccionarEnComboBox(Cb_tutorCurso, curso.getTutor());
+            seleccionarEnComboBox(Cb_horarioCurso, curso.getHorario());
+            seleccionarEnComboBox(Cb_sedeCurso, curso.getSede());
+            
+            // Establecer valor en Spinner
+            Sp_cuposCurso.setValue(curso.getCuposMaximos());
+            
+            // 4. SELECCIONAR Y RESALTAR EN LA TABLA
+            tablaCursos.setRowSelectionInterval(i, i);
+            tablaCursos.scrollRectToVisible(tablaCursos.getCellRect(i, 0, true));
+            
+            // 5. MENSAJE DE ÉXITO
+            JOptionPane.showMessageDialog(this, 
+                "✅ Curso encontrado\n\n" +
+                "• Código: " + curso.getCodigo() + "\n" +
+                "• Nombre: " + curso.getNombre() + "\n" +
+                "• Tutor: " + curso.getTutor() + "\n" +
+                "• Estudiantes inscritos: " + (curso.getCuposMaximos() - curso.getCuposDisponibles()), 
+                "Búsqueda exitosa", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            encontrado = true;
+            break;
+        }
+    }
+    
+    // 6. MENSAJE SI NO SE ENCUENTRA
+    if (!encontrado) {
+        JOptionPane.showMessageDialog(this, 
+            "No se encontró ningún curso con el código: " + terminoBusqueda + "\n\n" +
+            "Sugerencias:\n" +
+            "• Verifique que el código sea correcto\n" +
+            "• Los códigos son sensibles a mayúsculas\n" +
+            "• Ejemplo: PROG01, FOTO01", 
+            "Curso no encontrado", 
+            JOptionPane.WARNING_MESSAGE);
+    }
+    }//GEN-LAST:event_Jb_buscarCursoActionPerformed
 
     
     
