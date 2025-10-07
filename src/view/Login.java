@@ -4,6 +4,11 @@
  */
 package proyectoapprendo;
 
+import javax.swing.JOptionPane;
+import model.GestorUsuarios;
+import model.Usuario;
+import view.Register;
+
 /**
  *
  * @author rafaj
@@ -41,6 +46,9 @@ public class Login extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         txt_passwordlogin = new javax.swing.JPasswordField();
         login_button = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
 
@@ -99,9 +107,30 @@ public class Login extends javax.swing.JFrame {
         });
         jPanel4.add(txt_passwordlogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, 170, -1));
 
-        login_button.setBackground(new java.awt.Color(0, 153, 0));
+        login_button.setBackground(new java.awt.Color(51, 204, 0));
         login_button.setText("Iniciar sesión");
+        login_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                login_buttonActionPerformed(evt);
+            }
+        });
         jPanel4.add(login_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 270, -1, -1));
+
+        jLabel9.setText("¿Aún no te registras?");
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 130, -1));
+
+        jLabel10.setText("Dale");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 330, -1, -1));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 153, 204));
+        jLabel11.setText("click aquí para registrarte");
+        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel11MouseClicked(evt);
+            }
+        });
+        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 330, -1, -1));
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 310, 540));
 
@@ -134,6 +163,35 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_passwordloginActionPerformed
 
+    private void login_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_buttonActionPerformed
+        String inputUser = txt_userlogin.getText();
+        String password = txt_passwordlogin.getText();
+        
+        Usuario usuarioLog = GestorUsuarios.verificarLogin(inputUser, password);
+        
+        if(usuarioLog != null){
+            this.dispose();
+            
+            String rol = usuarioLog.getRol();
+            
+            if (rol.equals("Administrador")){
+                JOptionPane.showMessageDialog(null, "¡Bienvenido administrador!");
+            } else if (rol.equals("Gestor")){
+                JOptionPane.showMessageDialog(null, "¡Bienvenido gestor de tutores!");
+            } else if (rol.equals("Estudiante")){
+                JOptionPane.showMessageDialog(null, "Bienvenido, estudiante " + usuarioLog.getNombre());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Credenciales incorrectas. Verifique el usuario (o documento) y contraseña si estan correctos.", "Error de acceso.", JOptionPane.ERROR_MESSAGE);
+            
+        }
+    }//GEN-LAST:event_login_buttonActionPerformed
+
+    private void jLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseClicked
+        this.dispose();
+        new Register().setVisible(true);
+    }//GEN-LAST:event_jLabel11MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -161,6 +219,8 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -168,6 +228,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

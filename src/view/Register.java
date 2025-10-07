@@ -4,6 +4,13 @@
  */
 package view;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import model.GestorUsuarios;
+import model.Usuario;
+import proyectoapprendo.Login;
+
 /**
  *
  * @author rafaj
@@ -29,10 +36,138 @@ public class Register extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        txt_user = new javax.swing.JTextField();
+        txt_id = new javax.swing.JTextField();
+        txt_name = new javax.swing.JTextField();
+        txt_last = new javax.swing.JTextField();
+        txt_email = new javax.swing.JTextField();
+        txt_num = new javax.swing.JTextField();
+        txt_password = new javax.swing.JPasswordField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        op_doc = new javax.swing.JComboBox<>();
+        jLabel16 = new javax.swing.JLabel();
+        op_gen = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
+        txt_fecha = new javax.swing.JFormattedTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setFont(new java.awt.Font("Arial Black", 3, 24)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Apprendo");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 140, -1));
+
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tarea.png"))); // NOI18N
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 50, -1, 30));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 110));
+
+        jPanel3.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("¡Bienvenido al registro!");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, 160, -1));
+        jPanel3.add(txt_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 130, -1));
+        jPanel3.add(txt_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, 130, -1));
+        jPanel3.add(txt_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 90, 130, -1));
+        jPanel3.add(txt_last, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 130, -1));
+        jPanel3.add(txt_email, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, 130, -1));
+        jPanel3.add(txt_num, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 90, 130, -1));
+        jPanel3.add(txt_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 130, -1));
+
+        jLabel8.setText("Fecha nacimiento");
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 190, 100, -1));
+
+        jLabel9.setText("Usuario");
+        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 60, -1));
+
+        jLabel10.setText("Contraseña");
+        jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 80, -1));
+
+        jLabel11.setText("Documento");
+        jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 70, -1));
+
+        jLabel12.setText("Correo");
+        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 130, 60, -1));
+
+        jLabel13.setText("Apellido(s)");
+        jPanel3.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 130, 60, -1));
+
+        jLabel14.setText("Nombre(s)");
+        jPanel3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 70, 60, -1));
+
+        jLabel15.setText("Telefóno");
+        jPanel3.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 60, -1));
+
+        jButton1.setBackground(new java.awt.Color(51, 204, 0));
+        jButton1.setText("Registrarme");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 300, -1, -1));
+
+        op_doc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija una opción", "Cedula ciudadana", "Tarjeta de identidad" }));
+        jPanel3.add(op_doc, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, 140, -1));
+
+        jLabel16.setText("Tipo documento");
+        jPanel3.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 190, 110, -1));
+
+        op_gen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija una opción", "Masculino", "Femenino" }));
+        op_gen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                op_genActionPerformed(evt);
+            }
+        });
+        jPanel3.add(op_gen, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 260, 140, -1));
+
+        jLabel17.setText("Genero");
+        jPanel3.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 240, 70, -1));
+
+        try {
+            txt_fecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        jPanel3.add(txt_fecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 210, 130, -1));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 560, 340));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tom-hermans-9BoqXzEeQqM-unsplash.jpg"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 420, 280));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/laura-rivera-ArH3dtoDQc0-unsplash.jpg"))); // NOI18N
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 110, 420, 280));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/akshar-dave-wwy-z7NPTTM-unsplash.jpg"))); // NOI18N
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 390, 420, 250));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/max-shilov-phwRbHF6T8Q-unsplash.jpg"))); // NOI18N
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 390, 420, 250));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -47,6 +182,67 @@ public class Register extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        String fechaIngresada = txt_fecha.getText();
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        formatoFecha.setLenient(false);
+        
+        try{
+            formatoFecha.parse(fechaIngresada);
+        } catch(ParseException e){
+            JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Use el formato DD/MM/AAAA (Ej: 09/10/2007)", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String correo = txt_email.getText();
+        String regexEmail = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+        if (!correo.matches(regexEmail)){
+            JOptionPane.showMessageDialog(this, "El correo debe ser de la forma [usuario]@gmail.com", "Error de validación de correo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(op_doc.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de documento.", "Error de validación.", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(op_gen.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de genero.", "Error de validacion.", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String user = txt_user.getText();
+        String password = txt_password.getText();
+        String document = txt_id.getText();
+        
+        if(!document.matches("^[0-9]+$")){
+            JOptionPane.showMessageDialog(this, "El campo documento solo debe contener numeros.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String telefono = txt_num.getText();
+        if(!telefono.matches("^[0-9]+$")){
+            JOptionPane.showMessageDialog(this, "El campo telefono solo debe contener numeros.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String typeDoc = (String) op_doc.getSelectedItem();
+        String gender = (String) op_gen.getSelectedItem();
+        
+        Usuario nuevoEstudiante = new Usuario(user, password, document, txt_name.getText(), txt_last.getText(), txt_num.getText(), txt_email.getText(), typeDoc, gender, fechaIngresada);
+        GestorUsuarios.registrarUsuario(nuevoEstudiante);
+        
+        JOptionPane.showMessageDialog(this, "¡Registro con exito! Ya puedes iniciar sesión.");
+        
+        this.dispose();
+        new Login().setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void op_genActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_op_genActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_op_genActionPerformed
 
     /**
      * @param args the command line arguments
@@ -74,6 +270,36 @@ public class Register extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JComboBox<String> op_doc;
+    private javax.swing.JComboBox<String> op_gen;
+    private javax.swing.JTextField txt_email;
+    private javax.swing.JFormattedTextField txt_fecha;
+    private javax.swing.JTextField txt_id;
+    private javax.swing.JTextField txt_last;
+    private javax.swing.JTextField txt_name;
+    private javax.swing.JTextField txt_num;
+    private javax.swing.JPasswordField txt_password;
+    private javax.swing.JTextField txt_user;
     // End of variables declaration//GEN-END:variables
 }

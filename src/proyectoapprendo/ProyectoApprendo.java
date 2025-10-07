@@ -4,6 +4,8 @@
  */
 package proyectoapprendo;
 
+import model.GestorUsuarios;
+
 /**
  *
  * @author ISABELLA
@@ -14,7 +16,13 @@ public class ProyectoApprendo {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("andres pelon");
+        GestorUsuarios.inicializarUsuariosBase();
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Login().setVisible(true); 
+            }
+        });
     }
     
 }
