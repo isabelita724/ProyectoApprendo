@@ -62,7 +62,48 @@ public class MenuTutores01 extends javax.swing.JFrame {
 
         cargarCursosPredeterminados();
         refrescarTablaCursos();
+        
+        
+        modeloSedes = new DefaultTableModel();
+        modeloSedes.addColumn("Código");
+        modeloSedes.addColumn("Nombre");
+        modeloSedes.addColumn("Dirección");
+        modeloSedes.addColumn("Teléfono");
+        modeloSedes.addColumn("Ciudad");
+        modeloSedes.addColumn("Jefe Sede");
+        modeloSedes.addColumn("Capacidad");
+        modeloSedes.addColumn("Cursos Activos");
+
+        if (tablaSedes != null) {
+            this.tablaSedes.setModel(modeloSedes);
+        }
+
+        cargarSedesPredeterminadas();
+
+        actualizarComboBoxSedesCursos();
+
+        actualizarContadorCursosSedes();
+
+        refrescarTablaSedes();
     }
+    
+    
+    private void actualizarContadorCursosSedes() {
+    // Reiniciar contadores
+    for (Sede sede : listaSedes) {
+        sede.setCursosActivos(0);
+    }
+    
+    // Contar cursos por sede
+    for (Curso curso : listaCursos) {
+        for (Sede sede : listaSedes) {
+            if (sede.getNombre().equals(curso.getSede())) {
+                sede.agregarCurso();
+                break;
+            }
+        }
+    }
+}
     
     private void cargarSedesPredeterminadas() {
     
@@ -400,10 +441,10 @@ public class MenuTutores01 extends javax.swing.JFrame {
         Cb_ciudadSede = new javax.swing.JComboBox<>();
         jLabel25 = new javax.swing.JLabel();
         Sp_capacidadSede = new javax.swing.JSpinner();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
-        jToggleButton4 = new javax.swing.JToggleButton();
+        Bt_agregarSede = new javax.swing.JToggleButton();
+        Bt_eliminarSede = new javax.swing.JToggleButton();
+        Bt_modifcarSede = new javax.swing.JToggleButton();
+        Bt_buscarSede = new javax.swing.JToggleButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSedes = new javax.swing.JTable();
 
@@ -414,27 +455,28 @@ public class MenuTutores01 extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Banner.png"))); // NOI18N
+        jLabel6.setText("MENU TUTORES");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 1035, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(334, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(244, 244, 244)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(389, 389, 389))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jLabel6)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1040, 120));
@@ -927,28 +969,50 @@ public class MenuTutores01 extends javax.swing.JFrame {
         jLabel24.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel24.setText("Ciudad Sede");
 
-        Cb_jefeSede.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        Cb_jefeSede.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Jefe", "Dr. Carlos Martínez Herrera", "Lic. Ana Rodríguez Pérez", "Mg. Luis González Díaz", "Prof. María López Santos", "Ing. Jorge Silva Mendoza", "Dra. Patricia Castro Rojas", "Lic. Roberto Navarro Vega", "Mg. Sandra Morales Gil", "Esp. Juan Torres Fuentes", "Lic. Carolina Pájaro Silva", "Mg. Rafael Martínez Pérez" }));
 
-        Cb_ciudadSede.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        Cb_ciudadSede.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Ciudad", "Cartagena", "Turbaco", "Arjona", "Magangué", "Carmen de Bolívar", "San Juan Nepomuceno", "Santa Rosa de Lima", "María La Baja" }));
 
         jLabel25.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel25.setText("Capicidad Sede");
 
-        jToggleButton1.setBackground(new java.awt.Color(0, 255, 0));
-        jToggleButton1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jToggleButton1.setText("AGREGAR");
+        Sp_capacidadSede.setModel(new javax.swing.SpinnerNumberModel(10, 10, 50, 5));
 
-        jToggleButton2.setBackground(new java.awt.Color(255, 0, 0));
-        jToggleButton2.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jToggleButton2.setText("ELIMINAR");
+        Bt_agregarSede.setBackground(new java.awt.Color(0, 255, 0));
+        Bt_agregarSede.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Bt_agregarSede.setText("AGREGAR");
+        Bt_agregarSede.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Bt_agregarSedeActionPerformed(evt);
+            }
+        });
 
-        jToggleButton3.setBackground(new java.awt.Color(51, 51, 255));
-        jToggleButton3.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jToggleButton3.setText("MODIFICAR");
+        Bt_eliminarSede.setBackground(new java.awt.Color(255, 0, 0));
+        Bt_eliminarSede.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Bt_eliminarSede.setText("ELIMINAR");
+        Bt_eliminarSede.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Bt_eliminarSedeActionPerformed(evt);
+            }
+        });
 
-        jToggleButton4.setBackground(new java.awt.Color(255, 255, 51));
-        jToggleButton4.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jToggleButton4.setText("BUSCAR");
+        Bt_modifcarSede.setBackground(new java.awt.Color(51, 51, 255));
+        Bt_modifcarSede.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Bt_modifcarSede.setText("MODIFICAR");
+        Bt_modifcarSede.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Bt_modifcarSedeActionPerformed(evt);
+            }
+        });
+
+        Bt_buscarSede.setBackground(new java.awt.Color(255, 255, 51));
+        Bt_buscarSede.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        Bt_buscarSede.setText("BUSCAR");
+        Bt_buscarSede.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Bt_buscarSedeActionPerformed(evt);
+            }
+        });
 
         tablaSedes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -992,28 +1056,32 @@ public class MenuTutores01 extends javax.swing.JFrame {
                                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(Tx_direccionSede)
                                     .addComponent(Tx_telefonoSede, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel10Layout.createSequentialGroup()
                                         .addGap(51, 51, 51)
-                                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(Cb_jefeSede, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel10Layout.createSequentialGroup()
                                         .addGap(39, 39, 39)
-                                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(Cb_ciudadSede, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel10Layout.createSequentialGroup()
+                                        .addComponent(Cb_ciudadSede, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(8, 8, 8))
+                                    .addComponent(Cb_jefeSede, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(44, 44, 44))
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Bt_agregarSede, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(109, 109, 109)
-                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Bt_eliminarSede, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Bt_modifcarSede, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(122, 122, 122)
-                        .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32))))
-            .addComponent(jScrollPane3)
+                        .addComponent(Bt_buscarSede, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 23, Short.MAX_VALUE))))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1040,10 +1108,10 @@ public class MenuTutores01 extends javax.swing.JFrame {
                     .addComponent(Sp_capacidadSede, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
-                    .addComponent(jToggleButton2)
-                    .addComponent(jToggleButton3)
-                    .addComponent(jToggleButton4))
+                    .addComponent(Bt_agregarSede)
+                    .addComponent(Bt_eliminarSede)
+                    .addComponent(Bt_modifcarSede)
+                    .addComponent(Bt_buscarSede))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1703,6 +1771,398 @@ public class MenuTutores01 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_Cb_sedeCursoActionPerformed
 
+    private void Bt_agregarSedeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_agregarSedeActionPerformed
+            if (Tx_codigoSede.getText().trim().isEmpty() || 
+            Tx_nombreSede.getText().trim().isEmpty() ||
+            Tx_direccionSede.getText().trim().isEmpty() ||
+            Tx_telefonoSede.getText().trim().isEmpty()) {
+
+            JOptionPane.showMessageDialog(this, 
+                "Los campos Código, Nombre, Dirección y Teléfono son obligatorios", 
+                "Campos incompletos", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. VALIDAR COMBOBOXES
+        if (Cb_ciudadSede.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione una ciudad", 
+                "Ciudad no seleccionada", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (Cb_jefeSede.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione un jefe de sede", 
+                "Jefe de sede no seleccionado", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 3. VALIDAR SPINNER
+        int capacidad = (Integer) Sp_capacidadSede.getValue();
+        if (capacidad < 5 || capacidad > 50) {
+            JOptionPane.showMessageDialog(this, 
+                "La capacidad debe estar entre 5 y 50 cursos", 
+                "Capacidad fuera de rango", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 4. VALIDAR TELÉFONO (solo números)
+        if (!Tx_telefonoSede.getText().trim().matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, 
+                "El teléfono debe contener solo números", 
+                "Teléfono inválido", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 5. VALIDAR QUE EL CÓDIGO NO EXISTA
+        String codigo = Tx_codigoSede.getText().trim().toUpperCase();
+        for (Sede sedeExistente : listaSedes) {
+            if (sedeExistente.getCodigo().equalsIgnoreCase(codigo)) {
+                JOptionPane.showMessageDialog(this, 
+                    "Ya existe una sede con el código: " + codigo + "\n" +
+                    "Sede existente: " + sedeExistente.getNombre(), 
+                    "Código duplicado", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        try {
+            // 6. CREAR NUEVA SEDE
+            Sede nuevaSede = new Sede(
+                codigo,
+                Tx_nombreSede.getText().trim(),
+                Tx_direccionSede.getText().trim(),
+                Tx_telefonoSede.getText().trim(),
+                Cb_ciudadSede.getSelectedItem().toString(),
+                Cb_jefeSede.getSelectedItem().toString(),
+                capacidad
+            );
+
+            // 7. AGREGAR A LA LISTA
+            listaSedes.add(nuevaSede);
+
+            // 8. ACTUALIZAR COMBOBOX DE CURSOS
+            actualizarComboBoxSedesCursos();
+
+            // 9. ACTUALIZAR TABLA
+            refrescarTablaSedes();
+
+            // 10. LIMPIAR CAMPOS
+            limpiarCamposSedes();
+
+            // 11. MENSAJE DE CONFIRMACIÓN
+            JOptionPane.showMessageDialog(this, 
+                "Sede agregada correctamente\n\n" +
+                "• Código: " + codigo + "\n" +
+                "• Nombre: " + nuevaSede.getNombre() + "\n" +
+                "• Ciudad: " + nuevaSede.getCiudad() + "\n" +
+                "• Capacidad: " + nuevaSede.getCapacidadMaxima() + " cursos", 
+                "Sede registrada", 
+                JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al agregar la sede: " + e.getMessage(), 
+                "Error inesperado", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_Bt_agregarSedeActionPerformed
+
+    private void Bt_eliminarSedeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_eliminarSedeActionPerformed
+        int filaSeleccionada = tablaSedes.getSelectedRow();
+        
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, 
+                "❌ Por favor seleccione una sede de la tabla para eliminar", 
+                "Ninguna sede seleccionada", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. OBTENER LA SEDE SELECCIONADA
+        Sede sedeAEliminar = listaSedes.get(filaSeleccionada);
+
+        // 3. VERIFICAR SI HAY CURSOS ACTIVOS EN ESTA SEDE
+        if (sedeAEliminar.getCursosActivos() > 0) {
+            JOptionPane.showMessageDialog(this, 
+                "No se puede eliminar la sede\n\n" +
+                "• Sede: " + sedeAEliminar.getNombre() + "\n" +
+                "• Código: " + sedeAEliminar.getCodigo() + "\n" +
+                "• Cursos activos: " + sedeAEliminar.getCursosActivos() + "\n\n" +
+                "Primero debe eliminar o reubicar los cursos de esta sede.", 
+                "Sede con cursos activos", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 4. CONFIRMAR ELIMINACIÓN
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+            "¿Está seguro que desea eliminar esta sede?\n\n" +
+            "Información de la sede:\n" +
+            "• Código: " + sedeAEliminar.getCodigo() + "\n" +
+            "• Nombre: " + sedeAEliminar.getNombre() + "\n" +
+            "• Dirección: " + sedeAEliminar.getDireccion() + "\n" +
+            "• Ciudad: " + sedeAEliminar.getCiudad() + "\n\n" +
+            "Esta acción no se puede deshacer",
+            "Confirmar eliminación de sede",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // 5. ELIMINAR LA SEDE
+            listaSedes.remove(filaSeleccionada);
+
+            // 6. ACTUALIZAR COMBOBOX DE CURSOS
+            actualizarComboBoxSedesCursos();
+
+            // 7. ACTUALIZAR LA TABLA
+            refrescarTablaSedes();
+
+            // 8. LIMPIAR CAMPOS SI LA SEDE ELIMINADA ESTABA CARGADA
+            limpiarCamposSedes();
+
+            // 9. MENSAJE DE CONFIRMACIÓN
+            JOptionPane.showMessageDialog(this, 
+                "Sede eliminada correctamente\n\n" +
+                "• Código: " + sedeAEliminar.getCodigo() + "\n" +
+                "• Nombre: " + sedeAEliminar.getNombre(), 
+                "Sede eliminada", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_Bt_eliminarSedeActionPerformed
+
+    private void Bt_modifcarSedeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_modifcarSedeActionPerformed
+        // 1. VERIFICAR SI HAY UNA FILA SELECCIONADA
+        int filaSeleccionada = tablaSedes.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione una sede de la tabla para modificar", 
+                "Ninguna sede seleccionada", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. VALIDAR CAMPOS OBLIGATORIOS
+        if (Tx_codigoSede.getText().trim().isEmpty() || 
+            Tx_nombreSede.getText().trim().isEmpty() ||
+            Tx_direccionSede.getText().trim().isEmpty() ||
+            Tx_telefonoSede.getText().trim().isEmpty()) {
+
+            JOptionPane.showMessageDialog(this, 
+                "Los campos Código, Nombre, Dirección y Teléfono son obligatorios", 
+                "Campos incompletos", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 3. VALIDAR COMBOBOXES
+        if (Cb_ciudadSede.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione una ciudad", 
+                "Ciudad no seleccionada", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (Cb_jefeSede.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione un jefe de sede", 
+                "Jefe de sede no seleccionado", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 4. VALIDAR SPINNER
+        int nuevaCapacidad = (Integer) Sp_capacidadSede.getValue();
+        if (nuevaCapacidad < 5 || nuevaCapacidad > 50) {
+            JOptionPane.showMessageDialog(this, 
+                "La capacidad debe estar entre 5 y 50 cursos", 
+                "Capacidad fuera de rango", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 5. VALIDAR TELÉFONO
+        if (!Tx_telefonoSede.getText().trim().matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, 
+                "El teléfono debe contener solo números", 
+                "Teléfono inválido", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // 6. OBTENER LA SEDE ORIGINAL
+            Sede sedeOriginal = listaSedes.get(filaSeleccionada);
+            String codigoOriginal = sedeOriginal.getCodigo();
+            String codigoNuevo = Tx_codigoSede.getText().trim().toUpperCase();
+
+            // 7. VERIFICAR SI SE CAMBIÓ EL CÓDIGO Y SI EL NUEVO CÓDIGO YA EXISTE
+            if (!codigoOriginal.equals(codigoNuevo)) {
+                for (Sede sedeExistente : listaSedes) {
+                    if (sedeExistente.getCodigo().equalsIgnoreCase(codigoNuevo) && 
+                        !sedeExistente.getCodigo().equals(codigoOriginal)) {
+
+                        JOptionPane.showMessageDialog(this, 
+                            "Ya existe otra sede con el código: " + codigoNuevo + "\n" +
+                            "Sede existente: " + sedeExistente.getNombre(), 
+                            "Código duplicado", 
+                            JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+
+            // 8. VERIFICAR REDUCCIÓN DE CAPACIDAD (si hay cursos activos)
+            if (nuevaCapacidad < sedeOriginal.getCapacidadMaxima() && 
+                sedeOriginal.getCursosActivos() > nuevaCapacidad) {
+
+                JOptionPane.showMessageDialog(this, 
+                    "No se puede reducir la capacidad\n\n" +
+                    "• Capacidad actual: " + sedeOriginal.getCapacidadMaxima() + "\n" +
+                    "• Capacidad nueva: " + nuevaCapacidad + "\n" +
+                    "• Cursos activos: " + sedeOriginal.getCursosActivos() + "\n\n" +
+                    "La nueva capacidad no puede ser menor que la cantidad\nde cursos activos en la sede.", 
+                    "Reducción de capacidad no permitida", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 9. CONFIRMAR MODIFICACIÓN
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que desea modificar esta sede?\n\n" +
+                "Cambios a realizar:\n" +
+                "• Código: " + sedeOriginal.getCodigo() + " → " + codigoNuevo + "\n" +
+                "• Nombre: " + sedeOriginal.getNombre() + " → " + Tx_nombreSede.getText().trim() + "\n" +
+                "• Dirección: " + sedeOriginal.getDireccion() + " → " + Tx_direccionSede.getText().trim() + "\n" +
+                "• Teléfono: " + sedeOriginal.getTelefono() + " → " + Tx_telefonoSede.getText().trim() + "\n" +
+                "• Ciudad: " + sedeOriginal.getCiudad() + " → " + Cb_ciudadSede.getSelectedItem().toString() + "\n" +
+                "• Jefe: " + sedeOriginal.getJefeSede() + " → " + Cb_jefeSede.getSelectedItem().toString() + "\n" +
+                "• Capacidad: " + sedeOriginal.getCapacidadMaxima() + " → " + nuevaCapacidad + "\n\n" +
+                "⚠️ Los cambios afectarán a todos los cursos de esta sede",
+                "Confirmar modificación de sede",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                // 10. GUARDAR NOMBRE ORIGINAL PARA ACTUALIZAR CURSOS
+                String nombreOriginal = sedeOriginal.getNombre();
+
+                // 11. ACTUALIZAR LA SEDE
+                sedeOriginal.setCodigo(codigoNuevo);
+                sedeOriginal.setNombre(Tx_nombreSede.getText().trim());
+                sedeOriginal.setDireccion(Tx_direccionSede.getText().trim());
+                sedeOriginal.setTelefono(Tx_telefonoSede.getText().trim());
+                sedeOriginal.setCiudad(Cb_ciudadSede.getSelectedItem().toString());
+                sedeOriginal.setJefeSede(Cb_jefeSede.getSelectedItem().toString());
+                sedeOriginal.setCapacidadMaxima(nuevaCapacidad);
+
+                // 12. ACTUALIZAR EL NOMBRE DE LA SEDE EN LOS CURSOS
+                if (!nombreOriginal.equals(Tx_nombreSede.getText().trim())) {
+                    actualizarNombreSedeEnCursos(nombreOriginal, Tx_nombreSede.getText().trim());
+                }
+
+                // 13. ACTUALIZAR COMBOBOX DE CURSOS
+                actualizarComboBoxSedesCursos();
+
+                // 14. ACTUALIZAR LA TABLA
+                refrescarTablaSedes();
+
+                // 15. LIMPIAR CAMPOS
+                limpiarCamposSedes();
+
+                // 16. MENSAJE DE CONFIRMACIÓN
+                JOptionPane.showMessageDialog(this, 
+                    "Sede modificada correctamente\n\n" +
+                    "• Código: " + codigoNuevo + "\n" +
+                    "• Nombre: " + sedeOriginal.getNombre() + "\n" +
+                    "• Cursos actualizados: " + sedeOriginal.getCursosActivos(), 
+                    "Sede actualizada", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al modificar la sede: " + e.getMessage(), 
+                "Error inesperado", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_Bt_modifcarSedeActionPerformed
+
+    private void Bt_buscarSedeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_buscarSedeActionPerformed
+        String terminoBusqueda = Tx_codigoSede.getText().trim();
+    
+        if (terminoBusqueda.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Ingrese un código de sede para buscar", 
+                "Campo de búsqueda vacío", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. BUSCAR LA SEDE
+        boolean encontrado = false;
+        terminoBusqueda = terminoBusqueda.toUpperCase();
+
+        for (int i = 0; i < listaSedes.size(); i++) {
+            Sede sede = listaSedes.get(i);
+
+            if (sede.getCodigo().equalsIgnoreCase(terminoBusqueda)) {
+                // 3. CARGAR DATOS EN LOS CAMPOS
+                Tx_codigoSede.setText(sede.getCodigo());
+                Tx_nombreSede.setText(sede.getNombre());
+                Tx_direccionSede.setText(sede.getDireccion());
+                Tx_telefonoSede.setText(sede.getTelefono());
+
+                // Seleccionar en ComboBoxes
+                seleccionarEnComboBox(Cb_ciudadSede, sede.getCiudad());
+                seleccionarEnComboBox(Cb_jefeSede, sede.getJefeSede());
+
+                // Establecer valor en Spinner
+                Sp_capacidadSede.setValue(sede.getCapacidadMaxima());
+
+                // 4. SELECCIONAR Y RESALTAR EN LA TABLA
+                tablaSedes.setRowSelectionInterval(i, i);
+                tablaSedes.scrollRectToVisible(tablaSedes.getCellRect(i, 0, true));
+
+                // 5. MENSAJE DE ÉXITO
+                JOptionPane.showMessageDialog(this, 
+                    "Sede encontrada\n\n" +
+                    "• Código: " + sede.getCodigo() + "\n" +
+                    "• Nombre: " + sede.getNombre() + "\n" +
+                    "• Ciudad: " + sede.getCiudad() + "\n" +
+                    "• Cursos activos: " + sede.getCursosActivos() + "/" + sede.getCapacidadMaxima(), 
+                    "Búsqueda exitosa", 
+                    JOptionPane.INFORMATION_MESSAGE);
+
+                encontrado = true;
+                break;
+            }
+        }
+
+        // 6. MENSAJE SI NO SE ENCUENTRA
+        if (!encontrado) {
+            JOptionPane.showMessageDialog(this, 
+                "No se encontró ninguna sede con el código: " + terminoBusqueda + "\n\n" +
+                "Sugerencias:\n" +
+                "• Verifique que el código sea correcto\n" +
+                "• Los códigos son sensibles a mayúsculas\n" +
+                "• Ejemplo: SEDE001, SEDE002", 
+                "Sede no encontrada", 
+                JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_Bt_buscarSedeActionPerformed
+
     
     
     public static void main(String args[]) {
@@ -1729,8 +2189,12 @@ public class MenuTutores01 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Bt_agregar;
+    private javax.swing.JToggleButton Bt_agregarSede;
     private javax.swing.JButton Bt_buscar;
+    private javax.swing.JToggleButton Bt_buscarSede;
     private javax.swing.JButton Bt_eliminar;
+    private javax.swing.JToggleButton Bt_eliminarSede;
+    private javax.swing.JToggleButton Bt_modifcarSede;
     private javax.swing.JButton Bt_modificar;
     private javax.swing.JComboBox<String> Cb_ciudadSede;
     private javax.swing.JComboBox<String> Cb_curso;
@@ -1794,10 +2258,6 @@ public class MenuTutores01 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
-    private javax.swing.JToggleButton jToggleButton4;
     private javax.swing.JTable tabla;
     private javax.swing.JTable tablaCursos;
     private javax.swing.JTable tablaSedes;
