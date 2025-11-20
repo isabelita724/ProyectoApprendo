@@ -88,7 +88,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
     }
     
     
-    private void actualizarContadorCursosSedes() {
+    public void actualizarContadorCursosSedes() {
     // Reiniciar contadores
     for (Sede sede : listaSedes) {
         sede.setCursosActivos(0);
@@ -191,7 +191,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
 
         if (cursosActualizados > 0) {
             refrescarTablaCursos();
-            System.out.println("✅ Actualizados " + cursosActualizados + " cursos a la nueva sede");
+            System.out.println("Actualizados " + cursosActualizados + " cursos a la nueva sede");
         }
     }
 
@@ -214,7 +214,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
             // Establecer valor en Spinner
             Sp_capacidadSede.setValue(sede.getCapacidadMaxima());
 
-            System.out.println("✅ Sede seleccionada: " + sede.getNombre());
+            System.out.println("Sede seleccionada: " + sede.getNombre());
         }
     }
 
@@ -339,7 +339,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
             // Establecer valor en Spinner
             Sp_cuposCurso.setValue(curso.getCuposMaximos());
 
-            System.out.println("✅ Curso seleccionado: " + curso.getNombre());
+            System.out.println("Curso seleccionado: " + curso.getNombre());
         }
     }
     
@@ -452,7 +452,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
         jLabel6.setText("MENU TUTORES");
@@ -692,7 +692,6 @@ public class MenuTutores01 extends javax.swing.JFrame {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -744,6 +743,9 @@ public class MenuTutores01 extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(Bt_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(31, 31, 31))))))
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -772,9 +774,8 @@ public class MenuTutores01 extends javax.swing.JFrame {
                     .addComponent(Bt_eliminar)
                     .addComponent(Bt_modificar)
                     .addComponent(Bt_buscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTabbedPane1.addTab("ESTUDIANTES", jPanel8);
@@ -1881,7 +1882,7 @@ public class MenuTutores01 extends javax.swing.JFrame {
         
         if (filaSeleccionada == -1) {
             JOptionPane.showMessageDialog(this, 
-                "❌ Por favor seleccione una sede de la tabla para eliminar", 
+                "Por favor seleccione una sede de la tabla para eliminar", 
                 "Ninguna sede seleccionada", 
                 JOptionPane.WARNING_MESSAGE);
             return;
